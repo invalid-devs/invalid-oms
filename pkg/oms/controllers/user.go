@@ -16,9 +16,9 @@ import (
 type GetUserResponseDTO struct {
 	Id        uint      `json:"id"`
 	Username  string    `json:"username"`
-	IsActive  bool      `json:"isActive"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	IsActive  bool      `json:"is_active"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +61,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	body, _ := io.ReadAll(r.Body)
 
 	var requestDTO CreateUserRequestDTO
-	if err := json.Unmarshal(body, &requestDTO); err != nil {
+	err := json.Unmarshal(body, &requestDTO)
+	if err != nil {
 		log.Fatal(err)
 	}
 

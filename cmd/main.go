@@ -26,7 +26,19 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(omsMiddleware.DatabaseMiddleware(db))
 
-	r.Get("/v1/user/{id}", controllers.GetUser)
-	r.Post("/v1/user/", controllers.CreateUser)
+	// Public routes
+	r.Group(func(r chi.Router) {
+		r.Post("/api/v1/auth/sign-in/", controllers.SignIn)
+		r.Post("/api/v1/auth/sign-out/", controllers.SignIn)
+	})
+
+	// Private routes
+	r.Group(func(r chi.Router) {
+		r.Use(omsMiddleware.Authorization)
+
+		r.Get("/api/v1/user/{id}/", controllers.GetUser)
+		r.Post("/api/v1/user/", controllers.CreateUser)
+	})
+
 	http.ListenAndServe("0.0.0.0:3000", r)
 }
